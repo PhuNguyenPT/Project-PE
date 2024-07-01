@@ -6,7 +6,7 @@
     <div class="product-details-section">
       <h2>{{ product.name }}</h2>
       <p>Description: {{ product.description }}</p>
-      <p><strong>Price:</strong> ${{ product.price }}</p>
+      <p><strong>Price:</strong> ${{ product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") }} VND</p>
       <input type="number" required v-model="quantity" />
       <div v-if="quantityError">Select at least 1</div>
       <button class="submit-button" @click="addToCart()">Add to Cart</button>
