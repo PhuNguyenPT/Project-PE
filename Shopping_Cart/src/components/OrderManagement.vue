@@ -167,6 +167,7 @@ export default {
   gap: 20px;
   padding: 20px;
   background-color: #f0f2f5;
+  flex-direction: column;
 }
 
 .left-panel, .right-panel {
@@ -214,7 +215,7 @@ h2 {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
 }
 
