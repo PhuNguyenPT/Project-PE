@@ -11,7 +11,7 @@ To set up the backend of the Book Social Network project, follow these steps:
 1. Clone the repository:
 
 ```bash
-   git clone https://github.com/PhuNguyenPT/Shopping_Cart.git
+   git clone https://github.com/PhuNguyenPT/Project-PE.git
    cd Shopping_Cart
 ```
 - Create a new database in pgAdmin 4 with the name `shopping_cart`
