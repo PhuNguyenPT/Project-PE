@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-    <body>
         <form id="authentication" @submit.prevent="handleSubmit">
         <h1>Register Authentication</h1>
         <div class="input-field">
@@ -11,7 +10,6 @@
 
         <button type="submit" class="btn-continue">Submit</button>
     </form>
-    </body>
     </div>
     
 </template>
