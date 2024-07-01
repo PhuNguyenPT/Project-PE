@@ -33,6 +33,7 @@
         <input type="file" @change="handleFileUpload" multiple />
       </div>
       <button type="submit" class="btn-continue">Upload Product</button>
+      <p v-if="uploadMessage">{{ uploadMessage }}</p>
     </form>
 
     <!-- Form to Update Product -->
@@ -59,6 +60,7 @@
         <textarea v-model="updateData.description"></textarea>
       </div>
       <button type="submit" class="btn-continue">Update Product</button>
+      <p v-if="updateMessage">{{ updateMessage }}</p>
     </form>
 
     <!-- Form to Delete Product -->
@@ -69,6 +71,7 @@
         <input type="text" v-model="deleteProductId" required />
       </div>
       <button type="submit" class="btn-continue">Delete Product</button>
+      <p v-if="deleteMessage">{{ deleteMessage }}</p>
     </form>
 
     <!-- Form to Upload Files to Product -->
@@ -83,6 +86,7 @@
         <input type="file" @change="handleFileUpload" multiple />
       </div>
       <button type="submit" class="btn-continue">Upload Files</button>
+      <p v-if="uploadFilesMessage">{{ uploadFilesMessage }}</p>
     </form>
 
     <!-- Form to Update Files of Product -->
@@ -101,6 +105,7 @@
         <input type="file" @change="handleFileUpload" />
       </div>
       <button type="submit" class="btn-continue">Update File</button>
+      <p v-if="updateFileMessage">{{ updateFileMessage }}</p>
     </form>
   </div>
 </template>
@@ -127,7 +132,12 @@ export default {
       productId: '',
       deleteProductId: '',
       fileId: '',
-      files: []
+      files: [],
+      uploadMessage: '',
+      updateMessage: '',
+      deleteMessage: '',
+      uploadFilesMessage: '',
+      updateFileMessage: ''
     }
   },
   methods: {
@@ -155,9 +165,11 @@ export default {
           body: formData
         })
         const data = await response.json()
+        this.uploadMessage = 'Product uploaded successfully'
         console.log(data)
       } catch (err) {
         console.error(err)
+        this.uploadMessage = 'Failed to upload product'
       }
     },
     async updateProduct() {
@@ -179,43 +191,43 @@ export default {
           body: formData
         })
         const data = await response.json()
+        this.updateMessage = 'Product updated successfully'
         console.log(data)
       } catch (err) {
         console.error(err)
+        this.updateMessage = 'Failed to update product'
       }
     },
-    async deleteProduct() {
-      try {
-        const response = await fetch(`https://localhost/api/v1/products/delete/${this.deleteProductId}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ` + store.getters.getToken()
-          }
-        });
+    async deleteProduct(productId) {
+  try {
+    const response = await fetch(`https://localhost/api/v1/products/delete/${productId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${store.getters.getToken()}`
+      }
+    });
 
-        if (!response.ok) {
-          if (response.status === 404) {
-            // Handle conflict error
-            const errorData = await response.json();
-            console.error('Product not found:', errorData);
-            // Display an error message to the user
-          } 
-          else if (response.status === 403) {
-        console.error('Unauthorized deletion attempt');
-        // Handle unauthorized deletion error
-      }else {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-        } else {
-          const data = await response.json();
-          console.log('Product deletion successful:', data);
-          // Optionally, update UI or perform any additional actions upon successful deletion
-        }
-      } catch (err) {
-        console.error('Delete Product Error:', err);
-        // Handle other errors as needed
+    if (!response.ok) {
+      if (response.status === 409) {
+        const errorData = await response.json();
+        console.error('Conflict Error:', errorData);
+        // Handle conflict error, perhaps display an alert or message to the user
+        // Example:
+        this.errorMessage = 'Unable to delete the product due to existing references.';
+      } else {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    },
+    } else {
+      const data = await response.json();
+      console.log('Product deletion successful:', data);
+      // Optionally, update UI or perform any additional actions upon successful deletion
+    }
+  } catch (err) {
+    console.error('Delete Product Error:', err);
+    // Handle other errors as needed
+  }
+},
+
     async uploadFilesToProduct() {
       const formData = new FormData()
       for (let i = 0; i < this.files.length; i++) {
@@ -231,29 +243,45 @@ export default {
           body: formData
         })
         const data = await response.json()
+        this.uploadFilesMessage = 'Files uploaded successfully'
         console.log(data)
       } catch (err) {
         console.error(err)
+        this.uploadFilesMessage = 'Failed to upload files'
       }
     },
     async updateProductFile() {
-      const formData = new FormData()
-      formData.append('file', this.files[0])
+  const formData = new FormData();
+  formData.append('file', this.files[0]); // Ensure this.files[0] contains the correct file object
 
-      try {
-        const response = await fetch(`https://localhost/api/v1/products/update/${this.productId}/files/${this.fileId}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ` + store.getters.getToken()
-          },
-          body: formData
-        })
-        const data = await response.json()
-        console.log(data)
-      } catch (err) {
-        console.error(err)
+  try {
+    const response = await fetch(`https://localhost/api/v1/products/update/${this.productId}/files/${this.fileId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ` + store.getters.getToken()
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      if (response.status === 400) {
+        const errorData = await response.json();
+        console.error('Bad Request:', errorData);
+        // Handle specific error or display error message to the user
+      } else {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    },
+    } else {
+      const data = await response.json();
+      console.log('File update successful:', data);
+      // Optionally, update UI or perform additional actions upon successful file update
+    }
+  } catch (err) {
+    console.error('Update Product File Error:', err);
+    // Handle other errors as needed
+  }
+},
+
     goToAdminDashboard() {
       this.$router.push('/admindashboard');
     }
