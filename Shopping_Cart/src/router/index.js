@@ -12,7 +12,8 @@ import TransactionComplete from '@/components/TransactionComplete.vue';
 import SearchPage from '@/components/SearchPage.vue'
 import AdminDashboard from '@/components/AdminDashboard.vue';
 import AdminUserManagement from '@/components/AdminUserManagement.vue'
-import UserAccount from '@/components/UserAccount.vue';
+// import UserAccount from '@/components/UserAccount.vue';
+import AdminTransactionManagement from '@/components/AdminTransactionManagement.vue';
 
 const routes = [
   {
@@ -84,10 +85,15 @@ const routes = [
     name: 'AdminUserManagement',
     component: AdminUserManagement
   },
+  // {
+  //   path: '/useraccount/:email',
+  //   name: 'UserAccount',
+  //   component: UserAccount
+  // },
   {
-    path: '/useraccount/:email',
-    name: 'UserAccount',
-    component: UserAccount
+    path: '/admintransactionmanagement',
+    name: 'AdminTransactionManagement',
+    component: AdminTransactionManagement
   }
 ];
 
