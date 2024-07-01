@@ -2,6 +2,9 @@
   <div class="container">
     <h1>Admin Product Management</h1>
 
+    <!-- Back to Admin Dashboard Button -->
+    <button @click="goToAdminDashboard" class="btn-back">Back to Admin Dashboard</button>
+
     <!-- Form to Upload a Product -->
     <form @submit.prevent="uploadProduct" enctype="multipart/form-data">
       <h2>Upload Product</h2>
@@ -147,7 +150,7 @@ export default {
         const response = await fetch('https://localhost/api/v1/products/upload', {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${store.state.token}`
+            'Authorization': `Bearer ` + store.getters.getToken()
           },
           body: formData
         })
@@ -164,11 +167,14 @@ export default {
       if (this.updateData.stockQuantity) formData.append('stockQuantity', this.updateData.stockQuantity)
       if (this.updateData.description) formData.append('description', this.updateData.description)
 
+      console.log(`Updating product with ID: ${this.productId}`)
+      console.log('FormData:', [...formData.entries()])
+
       try {
-        const response = await fetch(`https://localhost/api/v1/products/${this.productId}`, {
-          method: 'PUT',
+        const response = await fetch(`https://localhost/api/v1/products/update/${this.productId}`, {
+          method: 'PATCH',
           headers: {
-            Authorization: `Bearer ${store.state.token}`
+            'Authorization': `Bearer ` + store.getters.getToken()
           },
           body: formData
         })
@@ -179,35 +185,37 @@ export default {
       }
     },
     async deleteProduct() {
-  try {
-    const response = await fetch(`https://localhost/api/v1/products/delete/${this.deleteProductId}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${store.state.token}`
+      try {
+        const response = await fetch(`https://localhost/api/v1/products/delete/${this.deleteProductId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ` + store.getters.getToken()
+          }
+        });
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            // Handle conflict error
+            const errorData = await response.json();
+            console.error('Product not found:', errorData);
+            // Display an error message to the user
+          } 
+          else if (response.status === 403) {
+        console.error('Unauthorized deletion attempt');
+        // Handle unauthorized deletion error
+      }else {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+        } else {
+          const data = await response.json();
+          console.log('Product deletion successful:', data);
+          // Optionally, update UI or perform any additional actions upon successful deletion
+        }
+      } catch (err) {
+        console.error('Delete Product Error:', err);
+        // Handle other errors as needed
       }
-    });
-
-    if (!response.ok) {
-      if (response.status === 409) {
-        // Handle conflict error
-        const errorData = await response.json();
-        console.error('Conflict Error:', errorData);
-        // Display an error message to the user
-      } else {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-    } else {
-      const data = await response.json();
-      console.log('Product deletion successful:', data);
-      // Optionally, update UI or perform any additional actions upon successful deletion
-    }
-
-  } catch (err) {
-    console.error('Delete Product Error:', err);
-    // Handle other errors as needed
-  }
-},
-
+    },
     async uploadFilesToProduct() {
       const formData = new FormData()
       for (let i = 0; i < this.files.length; i++) {
@@ -218,7 +226,7 @@ export default {
         const response = await fetch(`https://localhost/api/v1/products/${this.productId}/files`, {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${store.state.token}`
+            'Authorization': `Bearer ` + store.getters.getToken()
           },
           body: formData
         })
@@ -236,7 +244,7 @@ export default {
         const response = await fetch(`https://localhost/api/v1/products/update/${this.productId}/files/${this.fileId}`, {
           method: 'PUT',
           headers: {
-            Authorization: `Bearer ${store.state.token}`
+            'Authorization': `Bearer ` + store.getters.getToken()
           },
           body: formData
         })
@@ -245,6 +253,9 @@ export default {
       } catch (err) {
         console.error(err)
       }
+    },
+    goToAdminDashboard() {
+      this.$router.push('/admindashboard');
     }
   }
 }
@@ -290,14 +301,21 @@ form {
   border-radius: 3px;
 }
 
-.btn-continue {
+.btn-continue, .btn-back {
   background-color: #000;
   color: #fff;
-  border: none;
   padding: 10px 20px;
+  border: none;
   border-radius: 3px;
   cursor: pointer;
-  width: 100%;
-  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.btn-continue:hover, .btn-back:hover {
+  background-color: #333;
+}
+
+.btn-back {
+  margin-bottom: 20px;
 }
 </style>
