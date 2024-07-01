@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <body>
             <form id="signup-form" @submit.prevent="handleSubmit">
 
                 <h1>Sign up</h1>
@@ -34,7 +33,6 @@
                 </div>
                 <button type="submit" class="btn-continue">Continue</button>
             </form>
-        </body>
     </div>
 </template>
 
@@ -89,15 +87,6 @@ export default {
     justify-content: center;
     align-items: center;
 }
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #fff;
-    margin: 0;
-    padding: 0;
-
-}
-
 
 header h1 {
     margin: 0;
