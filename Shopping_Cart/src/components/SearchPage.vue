@@ -12,7 +12,7 @@
                     <div class="product-info">
                         <p class="product-name">{{product.name}}</p>
                         <div class="product-price">
-                            <p class="ori-price">{{product.price}}</p>
+                            <p class="ori-price">{{ product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") }} VND</p>
                         </div>
                     </div>
                 </div>
