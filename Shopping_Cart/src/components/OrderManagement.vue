@@ -20,8 +20,8 @@
                     <div>
                       <h4 class="product-name">{{ cartItem.productResponseDTO.name }}</h4>
                       <p class="quantity">Quantity: {{ cartItem.quantity }}</p>
-                      <p class="price">Price per unit: {{ cartItem.productResponseDTO.price }}</p>
-                      <p class="total-price">Total Price: {{ cartItem.totalAmount }}</p>
+                      <p class="price">Price per unit: {{ formatPriceWithPeriods(cartItem.productResponseDTO.price) }}</p>
+                      <p class="total-price">Total Price: {{ formatPriceWithPeriods(cartItem.totalAmount) }}</p>
                     </div>
                                         
                   </template>
@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import store from '../store'
+import store from '../store';
 
 export default {
   data() {
@@ -114,7 +114,7 @@ export default {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer `+ store.getters.getToken()
+            'Authorization': `Bearer ${store.getters.getToken()}`
           }
         });
         const cartData = await response.json();
@@ -131,7 +131,7 @@ export default {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ` + store.getters.getToken()
+            'Authorization': `Bearer ${store.getters.getToken()}`
           },
           body: JSON.stringify({
             orderInfo: this.orderInfo,
@@ -148,6 +148,11 @@ export default {
       } catch (error) {
         console.error('Error placing order:', error);
       }
+    },
+
+    // Format price with periods as thousand separators
+    formatPriceWithPeriods(price) {
+      return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
   },
   mounted() {
