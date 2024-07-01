@@ -2,6 +2,9 @@
   <div class="container">
     <h1>Admin User Management</h1>
 
+    <!-- Back to Admin Dashboard Button -->
+    <button @click="goToAdminDashboard" class="btn-back">Back to Admin Dashboard</button>
+
     <!-- Form to Fetch All Users -->
     <form @submit.prevent="fetchAllUsers">
       <h2>Fetch All Users</h2>
@@ -135,6 +138,9 @@ export default {
       } catch (err) {
         console.error(err)
       }
+    },
+    goToAdminDashboard() {
+      this.$router.push('/admindashboard');
     }
   }
 }
@@ -179,7 +185,7 @@ form {
   border-radius: 3px;
 }
 
-.btn-continue {
+.btn-continue, .btn-back {
   background-color: #000;
   color: #fff;
   padding: 10px 20px;
@@ -189,7 +195,11 @@ form {
   transition: background-color 0.3s;
 }
 
-.btn-continue:hover {
+.btn-continue:hover, .btn-back:hover {
   background-color: #333;
+}
+
+.btn-back {
+  margin-bottom: 20px;
 }
 </style>
