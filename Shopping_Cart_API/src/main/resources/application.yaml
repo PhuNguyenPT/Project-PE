@@ -1,0 +1,62 @@
+spring:
+  profiles:
+    active: dev
+  servlet:
+    multipart:
+      max-file-size: 50MB
+  datasource:
+    url: jdbc:postgresql://localhost:5432/shopping_cart
+    username: postgres
+    password: thienphu123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  mail:
+    host: localhost
+    port: 1025
+    username: mail
+    password: password
+    properties:
+      mail:
+        smtp:
+          trust: "*"
+        auth: true
+        starttls:
+          enable: true
+        connectiontimeout: 5000
+        timeout: 3000
+        writetimeout: 5000
+
+application:
+  security:
+    jwt:
+      private-key: classpath:private-key.pem
+      public-key: classpath:public-key.pem
+      expiration: 86400000
+  mailing:
+    frontend:
+      activation-url: http://localhost:8080/activate-account
+
+springdoc:
+  default-produces-media-type: application/json
+
+server:
+  port: 443
+  ssl:
+    enabled:
+      protocols: TLSv1.3,TLSv1.2
+    protocol: TLSv1.3
+    key-store: keystore.p12
+    key-store-password: password
+    keyStoreType: PKCS12
+    keyAlias: tomcat
+  servlet:
+    context-path: /api/v1
+  error:
+    include-message: always
+
