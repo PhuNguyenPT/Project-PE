@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TransactionService {
 
-    @Autowired
     private final TransactionRepository transactionRepository;
     private final MyUserService myUserService;
     private final OrderService orderService;
