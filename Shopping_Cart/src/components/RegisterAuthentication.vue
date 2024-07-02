@@ -33,7 +33,8 @@ export default {
                         this.Error = response.error;
                     }
                     else{
-                        this.$router.push('./loginpage');
+                        setTimeout(() => {
+                        this.$router.push('./loginpage');}, 2000);
                     }
                 })
                 
