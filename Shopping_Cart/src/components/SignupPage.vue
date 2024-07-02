@@ -77,7 +77,9 @@
           }
           
           // Navigate to RegisterAuthentication page upon successful registration
+          setTimeout(() => {
           this.$router.push('./RegisterAuthentication');
+        }, 2000);
         } catch (error) {
           console.error('Registration error:', error);
           // Handle error (e.g., show error message)
