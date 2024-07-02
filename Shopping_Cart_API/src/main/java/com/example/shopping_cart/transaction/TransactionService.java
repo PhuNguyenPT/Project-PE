@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,11 +25,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TransactionService {
 
+    @Autowired
     private final TransactionRepository transactionRepository;
     private final MyUserService myUserService;
     private final OrderService orderService;
     private final ProductService productService;
 
+    @Transactional
     public TransactionResponseDTO saveByAuthentication(
             @NotNull Authentication authentication,
             @NotNull TransactionRequestDTO transactionRequestDTO
@@ -71,7 +74,11 @@ public class TransactionService {
         for (ProductQuantity productQuantity : orderQuantities) {
             Long stockQuantity = productQuantity.getProduct().getStockQuantity();
             Product product = productQuantity.getProduct();
-            stockQuantity = stockQuantity - productQuantity.getQuantity();
+            if (stockQuantity - productQuantity.getQuantity() >= 0) {
+                stockQuantity = stockQuantity - productQuantity.getQuantity();
+            } else {
+                stockQuantity = 0L;
+            }
             product.setStockQuantity(stockQuantity);
             productService.save(product);
         }
