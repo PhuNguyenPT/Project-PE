@@ -1,12 +1,24 @@
 <template>
   <div>
-    <title>Awazon Shop</title>
     <header>
       <div class="header-container">
         <h1 class="logo logo-tooltip">
           <router-link to='/'>Awazon</router-link>
           <span class="tooltip-text">Visit Awazon Home</span>
         </h1>
+
+            <div class="nav-container">
+              <nav>
+                <ul class="nav-menu">
+                  <li @click="toggleDropdown" class="dropdown">
+                    <a href="#Category-section">Category</a>
+                    <div class="dropdown-content" v-if="showDropdown">
+                      <router-link v-for="category in categories" :key="category.id" :to="`/products?category=${category.id}`">{{ category.name }}</router-link>
+                    </div>
+                  </li>
+                </ul>
+              </nav>
+            </div>
 
         <div class="search-bar">
           <input type="text" placeholder="Search..." v-model="searchQuery">
@@ -17,28 +29,28 @@
         </div>
 
         <div class="user-actions">
-      <div class="user-section" v-if="email">
-        <img src="./assets/user.png" alt="User">
-        <div class="user-info">
-          <!-- Router link to user info page -->
-          <router-link :to="`/useraccount/${email}`" class="welcome">{{ email }}</router-link>
-          <div class="sign-in-up">
-            <a href="#" @click="logout">Logout</a>
+          <div class="user-section" v-if="email">
+            <img src="./assets/user.png" alt="User">
+            <div class="user-info">
+              <!-- Router link to user info page -->
+              <router-link :to="`/useraccount/${email}`" class="welcome">{{ email }}</router-link>
+              <div class="sign-in-up">
+                <a href="#" @click="logout">Logout</a>
+              </div>
+            </div>
+            <span class="tooltip-text">Account Actions</span>
           </div>
-        </div>
-        <span class="tooltip-text">Account Actions</span>
-      </div>
-      <div class="user-section" v-else>
-        <img src="./assets/user.png" alt="User">
-        <div class="user-info">
-          <div class="sign-in-up">
-            <router-link to="/LoginPage">Sign in</router-link>
-            <span class="divider">|</span>
-            <router-link to="/SignupPage">Sign up</router-link>
+          <div class="user-section" v-else>
+            <img src="./assets/user.png" alt="User">
+            <div class="user-info">
+              <div class="sign-in-up">
+                <router-link to="/LoginPage">Sign in</router-link>
+                <span class="divider">|</span>
+                <router-link to="/SignupPage">Sign up</router-link>
+              </div>
+            </div>
+            <span class="tooltip-text">Account Actions</span>
           </div>
-        </div>
-        <span class="tooltip-text">Account Actions</span>
-      </div>
           <!-- Adjusted router-link for cart section -->
           <router-link to="/ordermanagement" class="cart-section">
             <img src="./assets/cart.png" alt="Cart">
@@ -48,21 +60,7 @@
       </div>
     </header>
     <!-- Navigation section -->
-    <div class="nav-container">
-      <nav>
-        <!-- <div class="dropdown">
-          <button class="categories-button" @click="toggleDropdown">All Categories <span class="arrow-icon"></span></button>
-          <div class="dropdown-content" v-if="showDropdown">
-            <router-link v-for="category in categories" :key="category.id" :to="/products?category=${category.id}">{{ category.name }}</router-link>
-          </div>
-        </div> -->
-        <ul class="nav-menu">
-          <li><a href="#Bestsellers-section">Bestsellers</a></li>
-          <li><a href="#TopBrand-section">Top Brand</a></li>
-          <li><a href="#Promotion-section">Promotion</a></li>
-        </ul>
-      </nav>
-    </div>
+
 
     <!-- Your router-view to render components based on routes -->
     <router-view/>
@@ -114,7 +112,7 @@ export default {
   setup() {
     const email = computed(() => store.state.email);
     const searchQuery = ref('');
-    // const categories = ref([]);
+    const categories = ref([]); // Defined categories here
     const showDropdown = ref(false);
     const router = useRouter();
 
@@ -123,47 +121,46 @@ export default {
       window.location.reload();
     };
 
-    // const fetchCategories = () => {
-    //   fetch('https://localhost/api/v1/categories', {
-    //     method: 'GET',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       // Add any other headers if required (e.g., authentication headers)
-    //     }
-    //   })
-    //     .then(response => response.json())
-    //     .then(data => {
-    //       categories.value = data;
-    //     })
-    //     .catch(error => console.error('Error fetching categories:', error));
-    // };
+    const fetchCategories = () => {
+      fetch('https://localhost/api/v1/categories', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any other headers if required (e.g., authentication headers)
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        categories.value = data;
+      })
+      .catch(error => console.error('Error fetching categories:', error));
+    };
 
-    // const toggleDropdown = () => {
-    //   showDropdown.value = !showDropdown.value;
-    // };
+    const toggleDropdown = () => {
+      showDropdown.value = !showDropdown.value;
+    };
 
-    const handleSearch = () => {    
-      const url = '/search/' + searchQuery.value;  
+    const handleSearch = () => {
+      const url = '/search/' + searchQuery.value;
       router.replace(url);
     }
 
     onMounted(() => {
-      // fetchCategories();
+      fetchCategories();
       store.actions.initialize();
     });
 
     return {
       email,
       searchQuery,
-      // categories,
+      categories,
       logout,
       showDropdown,
-      // toggleDropdown,
+      toggleDropdown,
       handleSearch
     };
   }
 };
-
 </script>
 
 <style>
@@ -315,7 +312,10 @@ header {
   justify-content: center;
   align-items: center;
   border: 1px solid white; /* White border */
+  width: 70px; /* Fixed width */
+  height: 20px; /* Fixed height */
 }
+
 
 nav {
   display: flex;
@@ -345,7 +345,7 @@ nav {
 }
 
 .nav-menu li a:hover {
-  color: #e91e63; /* Pink hover color */
+  color: #8A2BE2; /* Pink hover color */
 }
 
 .dropdown {
@@ -356,7 +356,7 @@ nav {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #f9f9f9;
+  background-color: #808080;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
@@ -383,45 +383,45 @@ footer {
     padding: 40px 20px;
     margin-top: 200px;
   }
-  
+
   .footer-content {
     display: flex;
     justify-content: space-between;
     max-width: 1200px;
     margin: 0 auto;
   }
-  
+
   .footer-section {
     flex-basis: 25%;
     padding: 0 20px;
   }
-  
+
   .footer-section h3 {
     font-size: 18px;
     margin-bottom: 10px;
   }
-  
+
   .footer-section p,
   .footer-section ul {
     font-size: 14px;
     color: #666;
     margin-bottom: 5px;
   }
-  
+
   .footer-section ul {
     list-style-type: none;
     padding: 0;
   }
-  
+
   .footer-section ul li a {
     color: #666;
     text-decoration: none;
   }
-  
+
   .footer-section ul li a:hover {
     color: #333;
   }
-  
+
   .copyright {
     text-align: center;
     font-size: 14px;
@@ -429,10 +429,14 @@ footer {
     margin-top: 20px;
   }
 
-/* Remove underline from anchor tags */
-a {
-  text-decoration: none; /* Remove underline */
-  color: inherit; /* Inherit parent color */
+  /* Remove underline from router-link */
+.router-link-exact-active,
+.router-link-active {
+  text-decoration: none;
 }
 
+/* Remove underline from anchor tags */
+a {
+  text-decoration: none;
+}
 </style>
