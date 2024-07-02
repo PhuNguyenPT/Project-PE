@@ -66,6 +66,16 @@ public class ShoppingCartService {
                 products, shoppingCartRequestDTOList, savedShoppingCart
         );
 
+        // Check if product quantity exceeds stock
+        updatedShoppingCart.getQuantities().forEach(productQuantity -> {
+            Product product = productQuantity.getProduct();
+            if (productQuantity.getQuantity() > product.getStockQuantity()) {
+                throw new RuntimeException("Product " + product.getName() +
+                        " stock quantity is " + product.getStockQuantity() +
+                        " which is less than " + productQuantity.getQuantity());
+            }
+        });
+
         updatedShoppingCart.getQuantities().forEach(productQuantity ->
                 productQuantity.calculateTotalAmount(productQuantity.getProduct().getPrice())
         );
