@@ -9,24 +9,25 @@ import OrderManagement from '@/components/OrderManagement.vue';
 import TransactionManagement from '@/components/TransactionManagement';
 import ProductPage from '@/components/ProductPage.vue';
 import TransactionComplete from '@/components/TransactionComplete.vue';
-import SearchPage from '@/components/SearchPage.vue';
+import SearchPage from '@/components/SearchPage.vue'
 import AdminDashboard from '@/components/AdminDashboard.vue';
+import AdminUserManagement from '@/components/AdminUserManagement.vue'
 import UserAccount from '@/components/UserAccount.vue';
-import AdminUserManagement from '@/components/AdminUserManagement.vue';
-
+import AdminTransactionManagement from '@/components/AdminTransactionManagement.vue';
 import CategoryProducts from '@/components/CategoryProducts.vue';
 
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: HomePage
+    component: HomePage,
   },
   {
     path: '/search/:searchQuery?',
     name: 'Search',
     component: SearchPage
   },
+  
   {
     path: '/loginpage',
     name: 'LoginPage',
@@ -90,7 +91,11 @@ const routes = [
     name: 'UserAccount',
     component: UserAccount
   },
-
+  {
+    path: '/admintransactionmanagement',
+    name: 'AdminTransactionManagement',
+    component: AdminTransactionManagement
+  },
   {
     path: '/products',
     name: 'CategoryProducts',
@@ -100,16 +105,7 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
-  scrollBehavior(to) {
-    if (to.hash) {
-      return {
-        el: to.hash,
-        behavior: 'smooth'
-      };
-    }
-    return { top: 0 };
-  }
+  routes
 });
 
 export default router;
