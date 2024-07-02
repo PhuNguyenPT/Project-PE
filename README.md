@@ -44,7 +44,7 @@ Open a command prompt and navigate to the bin directory where the psql.exe file 
 ```bash
 pg_restore -U postgres -d shopping_cart absolute\path\toShopping_Cart_API\src\main\resources\shopping_cart.sql
 ```
-Then insert the password for the database when prompted.
+The database path cannot contain folders with spaces. Please enter the password when prompted.
 
 5. Install dependencies and run application in a third terminal for frontend:
 
