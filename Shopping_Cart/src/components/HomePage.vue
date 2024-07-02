@@ -117,12 +117,13 @@
 }
 
 .product-list {
-  padding-top: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  /* gap: 20px; */
 }
 
 .product-item {
