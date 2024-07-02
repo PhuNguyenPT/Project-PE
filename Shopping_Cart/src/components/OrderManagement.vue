@@ -31,6 +31,11 @@
                 </div>
               </li>
             </ul>
+
+            <!-- Total Cart Price -->
+            <div class="total-cart-price" v-if="cartItems.length > 0">
+              <p>Total Cart Price: {{ formatPriceWithPeriods(totalCartPrice) }}</p>
+            </div>
           </div>
         </div>
       </div>
@@ -153,6 +158,11 @@ export default {
     // Format price with periods as thousand separators
     formatPriceWithPeriods(price) {
       return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+  },
+  computed: {
+    totalCartPrice() {
+      return this.cartItems.reduce((total, cartItem) => total + cartItem.totalAmount, 0);
     }
   },
   mounted() {
