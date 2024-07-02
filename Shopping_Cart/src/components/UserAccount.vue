@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="user-container">
     <h1>User Account Details</h1>
     <div v-if="user">
       <p><strong>First Name:</strong> {{ user.firstName }}</p>
@@ -141,7 +141,7 @@ export default {
 </script>
 
 <style>
-.container {
+.user-container {
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
