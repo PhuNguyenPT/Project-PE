@@ -1,5 +1,6 @@
 <template>
   <div>
+    <title>Awazon Shop</title>
     <header>
       <div class="header-container">
         <h1 class="logo logo-tooltip">
@@ -429,14 +430,10 @@ footer {
     margin-top: 20px;
   }
 
-  /* Remove underline from router-link */
-.router-link-exact-active,
-.router-link-active {
-  text-decoration: none;
-}
-
 /* Remove underline from anchor tags */
 a {
-  text-decoration: none;
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit parent color */
 }
+
 </style>
