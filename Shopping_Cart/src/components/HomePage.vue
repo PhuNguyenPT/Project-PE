@@ -127,6 +127,8 @@
 }
 
 .product-item {
+flex-basis: calc(15% - 20px); /* Adjust the percentage to control the number of items per row (5 items here) */
+max-width: calc(15% - 20px); /* Adjust the percentage to control the number of items per row (5 items here) */
 width: 150px;
 height: 200px;
 display: flex;
