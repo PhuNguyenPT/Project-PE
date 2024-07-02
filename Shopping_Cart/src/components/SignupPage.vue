@@ -1,87 +1,93 @@
 <template>
     <div class="container">
-            <form id="signup-form" @submit.prevent="handleSubmit">
+      <h1>Create Account</h1>
+      <form id="signup-form" @submit.prevent="handleSubmit">
+        <!-- First Name -->
+         <div class="input-field">
+            <label>First Name</label>
+            <input type="text" v-model="firstName" required>
+         </div>
+        
+        <!-- Last Name -->
+         <div class="input-field">
+            <label>Last Name</label>
+            <input type="text" v-model="lastName" required>
+         </div>
+        
+        <!-- Email -->
+         <div class="input-field">
+            <label>Email</label>
+            <input type="email" v-model="email" required>
+         </div>
+        
+        <!-- Password -->
+         <div class="input-field">
+            <label>Password</label>
+            <input type="password" v-model="password" required>
+         </div>
+        
+        <!-- Confirm Password -->
+         <div class="input-field">
+            <label>Confirm Password</label>
+            <input type="password" v-model="confirmPassword" required>
+         </div>
 
-                <h1>Sign up</h1>
-
-                <div class="input-field">
-                    <label for="First Name">First Name:</label>
-                    <input type="text"  required v-model="FirstName">
-                </div>
-
-                <div class="input-field">
-                    <label for="Last Name">Last Name:</label>
-                    <input type="text" required v-model="LastName">
-                </div>
-
-
-                <div class="input-field">
-                    <label for="email-username">Email or Username:</label>
-                    <input type="text" required v-model="Email">
-                </div>
-
-                <div class="input-field">
-                    <label for="password">Password:</label>
-                    <input type="password" required v-model="Password">
-                    <div v-if="passError">{{ passError }}</div>
-                </div>
-
-                <div class="input-field">
-                    <label for="confirmed-password">Confirmed Password:</label>
-                    <input type="password" required v-model="ConfirmedPassword">
-                    <div v-if="passError">{{ passError }}</div>
-                </div>
-                <button type="submit" class="btn-continue">Continue</button>
-            </form>
+        <button type="submit" class="btn-continue">Continue</button>
+      </form>
     </div>
-</template>
-
-<script>
-export default {
-    data(){
-        return {
-            FirstName:'',
-            LastName:'',
-            Email: '',
-            Password:'',
-            ConfirmedPassword:'',
-            passError:''
-        }
+  </template>
+  
+  <script>
+  export default {
+    data() {
+      return {
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+      };
     },
     methods: {
-        handleSubmit(){
-            //validate pass
-            this.passError = this.Password == this.ConfirmedPassword ? '' : 'Password must be the same'
-            
-            if(!this.passError) {
-                let json = {
-                    "firstName": this.FirstName,
-                    "lastName": this.LastName,
-                    "email": this.Email,
-                    "password": this.Password
-                }
-
-                const options = {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(json),
-                };
-
-                fetch('https://localhost:443/api/v1/auth/register', options)
-                .then(response => response.json())
-                .then(response => {
-                    if (!response.length){
-                        this.$router.push('./RegisterAuthentication');
-                    }
-                })
-                .catch(err => console.error(err));
-            }
+      async handleSubmit() {
+        // Validate passwords match
+        if (this.password !== this.confirmPassword) {
+          console.error('Passwords do not match');
+          // Handle error (e.g., show error message)
+          return;
         }
+        
+        try {
+          // Make API call to register user and handle response
+          const response = await fetch('https://localhost:443/api/v1/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              firstName: this.firstName,
+              lastName: this.lastName,
+              email: this.email,
+              password: this.password
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error('Registration failed');
+          }
+          
+          // Navigate to RegisterAuthentication page upon successful registration
+          this.$router.push('./RegisterAuthentication');
+        } catch (error) {
+          console.error('Registration error:', error);
+          // Handle error (e.g., show error message)
+        }
+      }
     }
-}
-</script>
-
-<style>
+  };
+  </script>
+  
+  <style>
 .container {
     /* display: flex; */
     justify-content: center;
