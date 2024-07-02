@@ -60,7 +60,6 @@
           <li><a href="#Bestsellers-section">Bestsellers</a></li>
           <li><a href="#TopBrand-section">Top Brand</a></li>
           <li><a href="#Promotion-section">Promotion</a></li>
-          <li><a href="#Blog-section">Blog</a></li>
         </ul>
       </nav>
     </div>
