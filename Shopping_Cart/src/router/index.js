@@ -11,6 +11,7 @@ import ProductPage from '@/components/ProductPage.vue';
 import TransactionComplete from '@/components/TransactionComplete.vue';
 import SearchPage from '@/components/SearchPage.vue';
 import AdminDashboard from '@/components/AdminDashboard.vue';
+import UserAccount from '@/components/UserAccount.vue';
 import AdminUserManagement from '@/components/AdminUserManagement.vue';
 
 import CategoryProducts from '@/components/CategoryProducts.vue';
@@ -83,6 +84,11 @@ const routes = [
     path: '/adminusermanagement',
     name: 'AdminUserManagement',
     component: AdminUserManagement
+  },
+  {
+    path: '/useraccount/:email',
+    name: 'UserAccount',
+    component: UserAccount
   },
 
   {
